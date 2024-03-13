@@ -1,4 +1,4 @@
-package com.trip.safe.cors
+package com.trip.safe.common.cors
 
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.reactive.config.CorsRegistry

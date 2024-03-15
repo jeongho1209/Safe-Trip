@@ -1,1 +1,19 @@
-spring.application.name=Safe-Trip-Server
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    open-in-view: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+      dialect: org.hibernate.dialect.MySQL8InnoDBDialect
+
+jwt:
+  secretKey: ${SECRET_KEY}
+  accessTokenExp: ${ACCESS_EXP}

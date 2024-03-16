@@ -13,7 +13,7 @@ class JwtTokenProvider(
 
     fun createToken(accountId: String, tokenExpiration: Long): String = Jwts.builder()
         .signWith(SignatureAlgorithm.HS256, jwtTokenProperties.secretKey)
-        .setHeaderParam(JWT_TYPE, "accessToken")
+        .setHeaderParam(JWT_TYPE, JwtConstants.TOKEN_TYPE)
         .setSubject(accountId)
         .setIssuedAt(Date())
         .setExpiration(Date(System.currentTimeMillis() + tokenExpiration * 1000))

@@ -1,8 +1,44 @@
 CREATE TABLE IF NOT EXISTS user
 (
-    id         BIGINT      NOT NULL,
+    id         BIGINT             NOT NULL,
     account_id VARCHAR(20) UNIQUE NOT NULL,
-    password   CHAR(60)    NOT NULL,
-    age        TINYINT UNSIGNED NOT NULL,
+    password   CHAR(60)           NOT NULL,
+    age        TINYINT UNSIGNED   NOT NULL,
     PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS travel_destination
+(
+    id       BIGINT      NOT NULL,
+    name     VARCHAR(30) NOT NULL,
+    eng_name VARCHAR(30) NOT NULL,
+    code     CHAR(20)    NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS country_safe_info
+(
+    id                    BIGINT        NOT NULL,
+    title                 VARCHAR(40)   NOT NULL,
+    content               VARCHAR(1000) NOT NULL,
+    created_date          DATE          NOT NULL,
+    travel_destination_id BIGINT        NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (travel_destination_id) REFERENCES country_safe_info (id)
+);
+
+CREATE TABLE IF NOT EXISTS review
+(
+    id                    BIGINT        NOT NULL,
+    title                 VARCHAR(40)   NOT NULL,
+    content               VARCHAR(1000) NOT NULL,
+    created_date          DATE          NOT NULL,
+    image_url1            VARCHAR(500)  NULL,
+    image_url2            VARCHAR(500)  NULL,
+    image_url3            VARCHAR(500)  NULL,
+    travel_destination_id BIGINT        NOT NULL,
+    user_id               BIGINT        NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (travel_destination_id) REFERENCES country_safe_info (id),
+    FOREIGN KEY (user_id) REFERENCES user (id)
 );

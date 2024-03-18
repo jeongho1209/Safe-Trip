@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("org.springframework.boot") version "3.1.9"
-    id("io.spring.dependency-management") version "1.1.4"
+    id("io.spring.dependency-management") version "1.1.3"
     kotlin("jvm") version "1.8.22"
     kotlin("plugin.spring") version "1.8.22"
 }
@@ -21,7 +21,7 @@ repositories {
 dependencies {
     // r2dbc
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
-    implementation("io.asyncer:r2dbc-mysql:1.0.2") // spring version check
+    implementation("io.asyncer:r2dbc-mysql:1.0.2")
 
     // redis
     implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")

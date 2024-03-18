@@ -1,6 +1,6 @@
 package com.trip.safe.common.security.auth
 
-import com.trip.safe.user.User
+import com.trip.safe.user.domain.User
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 

@@ -1,6 +1,6 @@
 package com.trip.safe.common.security.auth
 
-import com.trip.safe.user.UserRepository
+import com.trip.safe.user.domain.UserRepository
 import kotlinx.coroutines.reactor.mono
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService
 import org.springframework.security.core.userdetails.UserDetails

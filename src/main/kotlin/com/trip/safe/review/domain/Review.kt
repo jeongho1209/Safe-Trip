@@ -5,7 +5,7 @@ import java.time.LocalDate
 
 class Review(
     @Id
-    val id: Long,
+    val id: Long = 0,
 
     val title: String,
     val content: String,

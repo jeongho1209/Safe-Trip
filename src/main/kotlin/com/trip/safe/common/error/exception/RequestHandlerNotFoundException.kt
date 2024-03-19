@@ -1,5 +1,7 @@
 package com.trip.safe.common.error.exception
 
+import com.trip.safe.common.error.BaseException
+
 class RequestHandlerNotFoundException(
     errorMessage: String,
 ) : BaseException(errorMessage, 400) {

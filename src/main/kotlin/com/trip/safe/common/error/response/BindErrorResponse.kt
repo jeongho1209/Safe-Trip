@@ -1,4 +1,4 @@
-package com.trip.safe.common.error.exception
+package com.trip.safe.common.error.response
 
 data class BindErrorResponse(
     val responseStatus: Int,

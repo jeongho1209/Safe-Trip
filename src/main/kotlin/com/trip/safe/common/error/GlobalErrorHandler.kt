@@ -1,9 +1,7 @@
 package com.trip.safe.common.error
 
-import com.trip.safe.common.error.exception.BaseException
-import com.trip.safe.common.error.exception.BindErrorResponse
-import com.trip.safe.common.error.exception.ErrorResponse
-import com.trip.safe.common.error.exception.ExceptionAttribute
+import com.trip.safe.common.error.response.BindErrorResponse
+import com.trip.safe.common.error.response.ErrorResponse
 import com.trip.safe.common.error.exception.InternalServerErrorException
 import com.trip.safe.common.error.exception.RequestHandlerNotFoundException
 import org.springframework.boot.autoconfigure.web.WebProperties

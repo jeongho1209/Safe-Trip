@@ -1,4 +1,4 @@
-package com.trip.safe.common.error.exception
+package com.trip.safe.common.error
 
 interface ExceptionAttribute {
     val errorMessage: String

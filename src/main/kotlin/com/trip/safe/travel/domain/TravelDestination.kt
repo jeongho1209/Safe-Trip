@@ -1,7 +1,9 @@
 package com.trip.safe.travel.domain
 
 import org.springframework.data.annotation.Id
+import org.springframework.data.relational.core.mapping.Table
 
+@Table("travel_destination")
 class TravelDestination(
     @Id
     val id: Long,

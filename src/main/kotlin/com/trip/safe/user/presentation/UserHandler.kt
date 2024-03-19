@@ -15,6 +15,7 @@ import java.net.URI
 class UserHandler(
     private val userService: UserService,
 ) {
+
     suspend fun signUp(serverRequest: ServerRequest): ServerResponse {
         val requestBody = serverRequest.getUserSignUpRequestBody()
         val tokenResponse = userService.signUp(requestBody)

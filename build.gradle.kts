@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "3.1.9"
+    id("org.springframework.boot") version "3.1.3"
     id("io.spring.dependency-management") version "1.1.3"
     kotlin("jvm") version "1.8.22"
     kotlin("plugin.spring") version "1.8.22"
@@ -21,7 +21,7 @@ repositories {
 dependencies {
     // r2dbc
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
-    implementation("io.asyncer:r2dbc-mysql:1.0.2")
+    implementation("com.github.jasync-sql:jasync-r2dbc-mysql:2.1.23")
 
     // redis
     implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
@@ -43,6 +43,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("io.jsonwebtoken:jjwt:0.9.1")
     implementation("javax.xml.bind:jaxb-api:2.4.0-b180830.0359")
+
+    // swagger
+    implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.2.0")
 }
 
 tasks {

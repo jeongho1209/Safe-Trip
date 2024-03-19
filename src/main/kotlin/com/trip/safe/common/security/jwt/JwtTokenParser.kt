@@ -1,5 +1,8 @@
 package com.trip.safe.common.security.jwt
 
+import com.trip.safe.common.error.exception.ExpiredTokenException
+import com.trip.safe.common.error.exception.InternalServerErrorException
+import com.trip.safe.common.error.exception.InvalidTokenException
 import com.trip.safe.common.security.auth.AuthDetailsService
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.ExpiredJwtException
@@ -30,9 +33,9 @@ class JwtTokenParser(
                 .parseClaimsJws(token).body
         }.onFailure { exception ->
             when (exception) {
-                is InvalidClaimException -> throw RuntimeException("")
-                is ExpiredJwtException -> throw RuntimeException("")
-                else -> throw RuntimeException("")
+                is InvalidClaimException -> throw InvalidTokenException(InvalidTokenException.INVALID_TOKEN)
+                is ExpiredJwtException -> throw ExpiredTokenException(ExpiredTokenException.EXPIRED_TOKEN)
+                else -> throw InternalServerErrorException(InternalServerErrorException.UNEXPECTED_ERROR)
             }
         }.getOrThrow()
 }

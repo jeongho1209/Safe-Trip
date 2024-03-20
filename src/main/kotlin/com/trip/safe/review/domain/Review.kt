@@ -7,7 +7,7 @@ import java.time.LocalDate
 @Table("review")
 class Review(
     @Id
-    val id: Long = 0,
+    var id: Long = 0,
 
     val title: String,
     val content: String,

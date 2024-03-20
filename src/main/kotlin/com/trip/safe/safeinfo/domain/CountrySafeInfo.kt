@@ -7,7 +7,7 @@ import java.time.LocalDate
 @Table("country_safe_info")
 class CountrySafeInfo(
     @Id
-    val id: Long,
+    var id: Long,
 
     val title: String,
     val content: String,

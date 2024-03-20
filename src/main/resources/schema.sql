@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS user
 (
-    id         BIGINT             NOT NULL,
+    id         BIGINT             NOT NULL AUTO_INCREMENT,
     account_id VARCHAR(20) UNIQUE NOT NULL,
     password   CHAR(60)           NOT NULL,
     age        TINYINT UNSIGNED   NOT NULL,
@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS user
 
 CREATE TABLE IF NOT EXISTS travel_destination
 (
-    id       BIGINT      NOT NULL,
+    id       BIGINT      NOT NULL AUTO_INCREMENT,
     name     VARCHAR(30) NOT NULL,
     eng_name VARCHAR(30) NOT NULL,
     code     CHAR(20)    NOT NULL,
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS travel_destination
 
 CREATE TABLE IF NOT EXISTS country_safe_info
 (
-    id                    BIGINT        NOT NULL,
+    id                    BIGINT        NOT NULL AUTO_INCREMENT,
     title                 VARCHAR(40)   NOT NULL,
     content               VARCHAR(1000) NOT NULL,
     created_date          DATE          NOT NULL,
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS country_safe_info
 
 CREATE TABLE IF NOT EXISTS review
 (
-    id                    BIGINT        NOT NULL,
+    id                    BIGINT        NOT NULL AUTO_INCREMENT,
     title                 VARCHAR(40)   NOT NULL,
     content               VARCHAR(1000) NOT NULL,
     created_date          DATE          NOT NULL,

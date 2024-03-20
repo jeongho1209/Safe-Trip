@@ -6,7 +6,7 @@ import org.springframework.data.relational.core.mapping.Table
 @Table("travel_destination")
 class TravelDestination(
     @Id
-    var id: Long,
+    var id: Long = 0,
 
     val name: String,
     val engName: String,

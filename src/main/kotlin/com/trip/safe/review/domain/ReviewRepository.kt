@@ -17,12 +17,12 @@ interface ReviewRepository : CoroutineCrudRepository<Review, Long> {
             r.imageUrl1,
             r.imageUrl2,
             r.imageUrl3,
-            u.age
-            from review as r
-            inner join user as u
-            on r.user_id = u.id
+            u.accountId
+            FROM review AS r
+            INNER JOIN user AS u
+            ON r.user_id = u.id
+            WHERE r.travel_destination_id = :travelDestinationId AND r.is_deleted = false
         """
     )
-//    on r.travel_destination_id = :travelDestinationId
     suspend fun findAllByTravelDestinationId(travelDestinationId: Long): Flux<ReviewElement>
 }

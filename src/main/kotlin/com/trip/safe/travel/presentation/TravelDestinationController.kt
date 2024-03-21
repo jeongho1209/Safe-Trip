@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-@RequestMapping("/travel")
+@RequestMapping("/travelDestination")
 @RestController
 class TravelDestinationController(
     private val travelDestinationService: TravelDestinationService,

@@ -16,7 +16,7 @@ data class ReviewElement(
     val imageUrl1: String?,
     val imageUrl2: String?,
     val imageUrl3: String?,
-    val age: Short,
+    val accountId: String,
 )
 
 fun ReviewElement.toReviewElement() = ReviewElement(
@@ -27,5 +27,5 @@ fun ReviewElement.toReviewElement() = ReviewElement(
     imageUrl1 = this.imageUrl1,
     imageUrl2 = this.imageUrl2,
     imageUrl3 = this.imageUrl3,
-    age = this.age,
+    accountId = this.accountId
 )

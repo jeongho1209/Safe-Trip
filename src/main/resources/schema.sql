@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS country_safe_info
     created_date          DATE          NOT NULL,
     travel_destination_id BIGINT        NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (travel_destination_id) REFERENCES country_safe_info (id)
+    FOREIGN KEY (travel_destination_id) REFERENCES travel_destination (id)
 );
 
 CREATE TABLE IF NOT EXISTS review
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS review
     travel_destination_id BIGINT        NOT NULL,
     user_id               BIGINT        NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (travel_destination_id) REFERENCES country_safe_info (id),
+    FOREIGN KEY (travel_destination_id) REFERENCES travel_destination (id),
     FOREIGN KEY (user_id) REFERENCES user (id)
 );
 
@@ -54,6 +54,6 @@ CREATE TABLE IF NOT EXISTS travel_info
     travel_destination_id BIGINT        NOT NULL,
     user_id               BIGINT        NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (travel_destination_id) REFERENCES country_safe_info (id),
+    FOREIGN KEY (travel_destination_id) REFERENCES travel_destination (id),
     FOREIGN KEY (user_id) REFERENCES user (id)
 );

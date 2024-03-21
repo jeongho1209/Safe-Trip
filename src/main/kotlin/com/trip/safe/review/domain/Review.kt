@@ -9,12 +9,31 @@ class Review(
     @Id
     var id: Long = 0,
 
-    val title: String,
-    val content: String,
+    var title: String,
+    var content: String,
     val createDate: LocalDate,
-    val imageUrl1: String?,
-    val imageUrl2: String?,
-    val imageUrl3: String?,
+    var imageUrl1: String?,
+    var imageUrl2: String?,
+    var imageUrl3: String?,
+    private var isDeleted: Boolean = false,
     val travelDestinationId: Long,
     val userId: Long,
-)
+) {
+    fun updateReview(
+        title: String,
+        content: String,
+        imageUrl1: String?,
+        imageUrl2: String?,
+        imageUrl3: String?
+    ) {
+        this.title = title
+        this.content = content
+        this.imageUrl1 = imageUrl1
+        this.imageUrl2 = imageUrl2
+        this.imageUrl3 = imageUrl3
+    }
+
+    fun deleteReview() {
+        this.isDeleted = true
+    }
+}

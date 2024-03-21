@@ -9,9 +9,20 @@ class TravelInfo(
     @Id
     var id: Long = 0,
 
-    val title: String,
-    val content: String,
+    var title: String,
+    var content: String,
     val createDate: LocalDate,
-    val travelDestinationId: Long,
+    private var isDeleted: Boolean = false,
+    var travelDestinationId: Long,
     val userId: Long,
-)
+) {
+    fun updateTravelInfo(title: String, content: String, travelDestinationId: Long) {
+        this.title = title
+        this.content = content
+        this.travelDestinationId = travelDestinationId
+    }
+
+    fun deleteTravelInfo() {
+        this.isDeleted = true
+    }
+}

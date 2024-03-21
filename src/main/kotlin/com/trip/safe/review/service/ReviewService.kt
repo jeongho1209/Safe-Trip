@@ -1,15 +1,19 @@
 package com.trip.safe.review.service
 
+import com.trip.safe.common.error.exception.UnAuthorizedException
 import com.trip.safe.common.security.SecurityFacade
 import com.trip.safe.review.domain.Review
 import com.trip.safe.review.domain.ReviewRepository
+import com.trip.safe.review.exception.ReviewNotFoundException
 import com.trip.safe.review.presentation.dto.request.CreateReviewRequest
+import com.trip.safe.review.presentation.dto.request.UpdateReviewRequest
 import com.trip.safe.review.presentation.dto.response.ReviewListResponse
 import com.trip.safe.review.presentation.dto.response.toReviewElement
 import com.trip.safe.travel.domain.TravelDestinationRepository
 import com.trip.safe.travel.exception.TravelDestinationNotFoundException
 import kotlinx.coroutines.reactor.awaitSingle
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
 
 @Service
@@ -36,6 +40,40 @@ class ReviewService(
                 userId = user.id
             )
         )
+    }
+
+    @Transactional
+    suspend fun updateReview(request: UpdateReviewRequest, reviewId: Long) {
+        val user = securityFacade.getCurrentUser()
+
+        val review = reviewRepository.findById(reviewId)
+            ?: throw ReviewNotFoundException(ReviewNotFoundException.REVIEW_NOT_FOUND)
+
+        if (review.userId != user.id) {
+            throw UnAuthorizedException(UnAuthorizedException.UN_AUTHORIZED)
+        }
+
+        review.updateReview(
+            title = request.title,
+            content = request.content,
+            imageUrl1 = request.imageUrl1,
+            imageUrl2 = request.imageUrl2,
+            imageUrl3 = request.imageUrl3
+        )
+    }
+
+    @Transactional
+    suspend fun deleteReview(reviewId: Long) {
+        val user = securityFacade.getCurrentUser()
+
+        val review = reviewRepository.findById(reviewId)
+            ?: throw ReviewNotFoundException(ReviewNotFoundException.REVIEW_NOT_FOUND)
+
+        if (review.userId != user.id) {
+            throw UnAuthorizedException(UnAuthorizedException.UN_AUTHORIZED)
+        }
+
+        review.deleteReview()
     }
 
     suspend fun getReviewsByTravelDestinationId(travelDestinationId: Long): ReviewListResponse {

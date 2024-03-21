@@ -42,3 +42,16 @@ CREATE TABLE IF NOT EXISTS review
     FOREIGN KEY (travel_destination_id) REFERENCES country_safe_info (id),
     FOREIGN KEY (user_id) REFERENCES user (id)
 );
+
+CREATE TABLE IF NOT EXISTS travel_info
+(
+    id                    BIGINT        NOT NULL AUTO_INCREMENT,
+    title                 VARCHAR(40)   NOT NULL,
+    content               VARCHAR(1000) NOT NULL,
+    created_date          DATE          NOT NULL,
+    travel_destination_id BIGINT        NOT NULL,
+    user_id               BIGINT        NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (travel_destination_id) REFERENCES country_safe_info (id),
+    FOREIGN KEY (user_id) REFERENCES user (id)
+);

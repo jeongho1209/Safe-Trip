@@ -11,7 +11,7 @@ class Review(
 
     var title: String,
     var content: String,
-    val createDate: LocalDate,
+    val createdDate: LocalDate,
     var imageUrl1: String?,
     var imageUrl2: String?,
     var imageUrl3: String?,

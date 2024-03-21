@@ -13,16 +13,46 @@ interface ReviewRepository : CoroutineCrudRepository<Review, Long> {
             r.id,
             r.title, 
             r.content,
-            r.createDate,
-            r.imageUrl1,
-            r.imageUrl2,
-            r.imageUrl3,
-            u.accountId
+            r.created_date,
+            r.image_url1,
+            r.image_url2,
+            r.image_url3,
+            u.account_id
             FROM review AS r
             INNER JOIN user AS u
             ON r.user_id = u.id
             WHERE r.travel_destination_id = :travelDestinationId AND r.is_deleted = false
+            ORDER BY created_date DESC
+            LIMIT :limit
+            OFFSET :offset
         """
     )
-    suspend fun findAllByTravelDestinationId(travelDestinationId: Long): Flux<ReviewElement>
+    suspend fun findAllByTravelDestinationId(travelDestinationId: Long, limit: Int, offset: Long): Flux<ReviewElement>
+
+    @Query(
+        """
+            SELECT
+            r.id,
+            r.title, 
+            r.content,
+            r.created_date,
+            r.image_url1,
+            r.image_url2,
+            r.image_url3,
+            u.account_id
+            FROM review AS r
+            INNER JOIN user AS u
+            ON r.user_id = u.id
+            WHERE r.travel_destination_id = :travelDestinationId AND r.user_id = :userId AND r.is_deleted = false 
+            ORDER BY created_date DESC
+            LIMIT :limit
+            OFFSET :offset
+        """
+    )
+    suspend fun findAllByUserAndTravelDestinationId(
+        travelDestinationId: Long,
+        userId: Long,
+        limit: Int,
+        offset: Long,
+    ): Flux<ReviewElement>
 }

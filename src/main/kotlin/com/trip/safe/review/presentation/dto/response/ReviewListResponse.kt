@@ -12,20 +12,22 @@ data class ReviewElement(
     val id: Long,
     val title: String,
     val content: String,
-    val createDate: LocalDate,
+    val createdDate: LocalDate,
     val imageUrl1: String?,
     val imageUrl2: String?,
     val imageUrl3: String?,
+    val isMine: Boolean,
     val accountId: String,
 )
 
-fun ReviewElement.toReviewElement() = ReviewElement(
+fun ReviewElement.toReviewElement(userAccountId: String) = ReviewElement(
     id = this.id,
     title = this.title,
     content = this.content,
-    createDate = this.createDate,
+    createdDate = this.createdDate,
     imageUrl1 = this.imageUrl1,
     imageUrl2 = this.imageUrl2,
     imageUrl3 = this.imageUrl3,
-    accountId = this.accountId
+    isMine = this.accountId == userAccountId,
+    accountId = this.accountId,
 )

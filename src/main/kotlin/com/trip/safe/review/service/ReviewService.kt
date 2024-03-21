@@ -1,5 +1,6 @@
 package com.trip.safe.review.service
 
+import com.trip.safe.common.error.exception.BadRequestException
 import com.trip.safe.common.error.exception.UnAuthorizedException
 import com.trip.safe.common.security.SecurityFacade
 import com.trip.safe.review.domain.Review
@@ -12,6 +13,7 @@ import com.trip.safe.review.presentation.dto.response.toReviewElement
 import com.trip.safe.travel.domain.TravelDestinationRepository
 import com.trip.safe.travel.exception.TravelDestinationNotFoundException
 import kotlinx.coroutines.reactor.awaitSingle
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
@@ -22,6 +24,10 @@ class ReviewService(
     private val reviewRepository: ReviewRepository,
     private val securityFacade: SecurityFacade,
 ) {
+    companion object {
+        private const val MY = "my"
+        private const val ALL = "all"
+    }
 
     suspend fun createReview(request: CreateReviewRequest, travelDestinationId: Long) {
         val user = securityFacade.getCurrentUser()
@@ -32,7 +38,7 @@ class ReviewService(
             Review(
                 title = request.title,
                 content = request.content,
-                createDate = LocalDate.now(),
+                createdDate = LocalDate.now(),
                 imageUrl1 = request.imageUrl1,
                 imageUrl2 = request.imageUrl2,
                 imageUrl3 = request.imageUrl3,
@@ -76,13 +82,38 @@ class ReviewService(
         review.deleteReview()
     }
 
-    suspend fun getReviewsByTravelDestinationId(travelDestinationId: Long): ReviewListResponse {
-        val reviewList = reviewRepository.findAllByTravelDestinationId(travelDestinationId).collectList().awaitSingle()
+    suspend fun getReviewsByTravelDestinationId(
+        travelDestinationId: Long,
+        type: String,
+        pageable: Pageable,
+    ): ReviewListResponse {
+        val user = securityFacade.getCurrentUser()
+        val reviewList = when (type) {
+            MY -> {
+                reviewRepository.findAllByTravelDestinationId(
+                    travelDestinationId = travelDestinationId,
+                    limit = pageable.pageSize,
+                    offset = pageable.offset,
+                )
+            }
+
+            ALL -> {
+                reviewRepository.findAllByUserAndTravelDestinationId(
+                    travelDestinationId = travelDestinationId,
+                    userId = user.id,
+                    limit = pageable.pageSize,
+                    offset = pageable.offset,
+                )
+            }
+
+            else -> throw BadRequestException(BadRequestException.BAD_REQUEST)
+        }.collectList().awaitSingle()
+
         val travelDestination = travelDestinationRepository.findById(travelDestinationId)
             ?: throw TravelDestinationNotFoundException(TravelDestinationNotFoundException.TRAVEL_DESTINATION_NOT_FOUND)
 
         return ReviewListResponse(
-            reviewList = reviewList.map { it.toReviewElement() },
+            reviewList = reviewList.map { it.toReviewElement(user.accountId) },
             travelDestination = travelDestination,
         )
     }

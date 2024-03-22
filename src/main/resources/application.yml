@@ -7,3 +7,7 @@ spring:
 jwt:
   secret_key: ${SECRET_KEY}
   access_token_exp: ${ACCESS_EXP}
+
+service:
+  url: ${SERVICE_URL}
+  key: ${SERVICE_KEY}

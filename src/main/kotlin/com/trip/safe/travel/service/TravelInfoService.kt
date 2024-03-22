@@ -1,6 +1,6 @@
 package com.trip.safe.travel.service
 
-import com.trip.safe.common.error.exception.UnAuthorizedException
+import com.trip.safe.common.error.exception.ForbiddenException
 import com.trip.safe.common.security.SecurityFacade
 import com.trip.safe.travel.domain.TravelDestinationRepository
 import com.trip.safe.travel.domain.TravelInfo
@@ -45,7 +45,7 @@ class TravelInfoService(
             ?: throw TravelInfoNotFoundException(TravelInfoNotFoundException.TRAVEL_INFO_NOT_FOUND)
 
         if (travelInfo.userId != user.id) {
-            throw UnAuthorizedException(UnAuthorizedException.UN_AUTHORIZED)
+            throw ForbiddenException(ForbiddenException.FORBIDDEN)
         }
 
         travelDestinationRepository.findById(request.travelDestinationId)?.let {
@@ -65,7 +65,7 @@ class TravelInfoService(
             ?: throw TravelInfoNotFoundException(TravelInfoNotFoundException.TRAVEL_INFO_NOT_FOUND)
 
         if (travelInfo.userId != user.id) {
-            throw UnAuthorizedException(UnAuthorizedException.UN_AUTHORIZED)
+            throw ForbiddenException(ForbiddenException.FORBIDDEN)
         }
 
         travelInfo.deleteTravelInfo()

@@ -21,4 +21,15 @@ class TravelDestinationService(
             travelDestinationList = travelDestinationList.map { it.toTravelDestinationElement() }
         )
     }
+
+    suspend fun getTravelDestinationListByName(name: String, pageable: Pageable): TravelDestinationListResponse {
+        val travelDestinationList = travelDestinationRepository.findAllByName(
+            name = name,
+            pageable = pageable
+        ).collectList().awaitSingle()
+
+        return TravelDestinationListResponse(
+            travelDestinationList = travelDestinationList.map { it.toTravelDestinationElement() }
+        )
+    }
 }

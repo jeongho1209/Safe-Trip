@@ -7,4 +7,5 @@ import reactor.core.publisher.Flux
 interface TravelDestinationRepository : CoroutineCrudRepository<TravelDestination, Long> {
 
     suspend fun findAllBy(pageable: Pageable): Flux<TravelDestination>
+    suspend fun findAllByName(name: String, pageable: Pageable): Flux<TravelDestination>
 }

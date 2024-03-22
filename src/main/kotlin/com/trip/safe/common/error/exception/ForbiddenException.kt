@@ -2,10 +2,10 @@ package com.trip.safe.common.error.exception
 
 import com.trip.safe.common.error.BaseException
 
-class UnAuthorizedException(
+class ForbiddenException(
     errorMessage: String,
-) : BaseException(errorMessage, 401) {
+) : BaseException(errorMessage, 403) {
     companion object {
-        const val UN_AUTHORIZED = "Un Authorized"
+        const val FORBIDDEN = "Forbidden"
     }
 }

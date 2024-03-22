@@ -1,7 +1,7 @@
 package com.trip.safe.review.service
 
 import com.trip.safe.common.error.exception.BadRequestException
-import com.trip.safe.common.error.exception.UnAuthorizedException
+import com.trip.safe.common.error.exception.ForbiddenException
 import com.trip.safe.common.security.SecurityFacade
 import com.trip.safe.review.domain.Review
 import com.trip.safe.review.domain.ReviewRepository
@@ -56,7 +56,7 @@ class ReviewService(
             ?: throw ReviewNotFoundException(ReviewNotFoundException.REVIEW_NOT_FOUND)
 
         if (review.userId != user.id) {
-            throw UnAuthorizedException(UnAuthorizedException.UN_AUTHORIZED)
+            throw ForbiddenException(ForbiddenException.FORBIDDEN)
         }
 
         review.updateReview(
@@ -76,7 +76,7 @@ class ReviewService(
             ?: throw ReviewNotFoundException(ReviewNotFoundException.REVIEW_NOT_FOUND)
 
         if (review.userId != user.id) {
-            throw UnAuthorizedException(UnAuthorizedException.UN_AUTHORIZED)
+            throw ForbiddenException(ForbiddenException.FORBIDDEN)
         }
 
         review.deleteReview()

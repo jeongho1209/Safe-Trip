@@ -1,8 +1,11 @@
 package com.trip.safe.common.webclient.client
 
+import com.trip.safe.common.error.exception.BadRequestException
 import com.trip.safe.common.logger.logger
+import com.trip.safe.common.webclient.dto.response.CountrySafetyInfoElement
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.slf4j.Logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
@@ -10,7 +13,6 @@ import org.springframework.web.reactive.function.client.awaitBody
 import org.springframework.web.util.DefaultUriBuilderFactory
 import org.xml.sax.InputSource
 import java.io.StringReader
-import java.util.logging.Logger
 import javax.xml.parsers.DocumentBuilderFactory
 
 @Component
@@ -21,12 +23,18 @@ class CountrySafetyWebClient(
     private val serviceUrl: String,
 ) {
     companion object {
-        private val TAG_LIST = listOf("content", "countryEnName", "countryName", "id", "title", "wrtDt")
+        private const val CONTENT = "content"
+        private const val COUNTRY_EN_NAME = "countryEnName"
+        private const val COUNTRY_NAME = "countryName"
+        private const val ID = "id"
+        private const val TITLE = "title"
+        private const val WRT_DT = "wrtDt"
+        private val TAG_LIST = listOf(CONTENT, COUNTRY_EN_NAME, COUNTRY_NAME, ID, TITLE, WRT_DT)
     }
 
     private val log: Logger = logger()
 
-    suspend fun getCountrySafetyInfo(searchId: String): MutableMap<String, String> {
+    suspend fun getCountrySafetyInfo(searchId: String): CountrySafetyInfoElement {
         val factory = DefaultUriBuilderFactory(serviceUrl).apply {
             encodingMode = DefaultUriBuilderFactory.EncodingMode.VALUES_ONLY
         }
@@ -51,19 +59,32 @@ class CountrySafetyWebClient(
             .retrieve()
             .awaitBody<String>()
 
-        val documentBuilderFactory = DocumentBuilderFactory.newInstance()
-        val documentBuilder = documentBuilderFactory.newDocumentBuilder()
-        val document = withContext(Dispatchers.IO) {
-            documentBuilder.parse(InputSource(StringReader(response)))
-        }
-        document.documentElement.normalize()
-
         val safetyInfoMap = mutableMapOf<String, String>()
+        parsingXML(response, safetyInfoMap)
 
-        TAG_LIST.forEach { tagName ->
-            safetyInfoMap[tagName] = document.getElementsByTagName(tagName).item(0).textContent
+        return CountrySafetyInfoElement(
+            content = safetyInfoMap[CONTENT]!!,
+            countryEnName = safetyInfoMap[COUNTRY_EN_NAME]!!,
+            countryName = safetyInfoMap[COUNTRY_NAME]!!,
+            id = safetyInfoMap[ID]!!,
+            title = safetyInfoMap[TITLE]!!,
+            wrtDt = safetyInfoMap[WRT_DT]!!,
+        )
+    }
+
+    suspend fun getCountrySafetyList(pageSize: Int, pageNumber: Int, title: String) {
+
+    }
+
+    private suspend fun parsingXML(response: String, safetyInfoMap: MutableMap<String, String>) {
+        val documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
+        val document = withContext(Dispatchers.IO) { documentBuilder.parse(InputSource(StringReader(response))) }
+        runCatching {
+            TAG_LIST.forEach { tagName ->
+                safetyInfoMap[tagName] = document.getElementsByTagName(tagName).item(0).textContent
+            }
+        }.onFailure {
+            throw BadRequestException(BadRequestException.BAD_REQUEST)
         }
-
-        return safetyInfoMap
     }
 }

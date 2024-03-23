@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS country_safe_info
 (
     id                    BIGINT        NOT NULL AUTO_INCREMENT,
     title                 VARCHAR(40)   NOT NULL,
-    content               VARCHAR(1000) NOT NULL,
+    content               VARCHAR(5000) NOT NULL,
     created_date          DATE          NOT NULL,
     travel_destination_id BIGINT        NOT NULL,
     PRIMARY KEY (id),
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS review
 (
     id                    BIGINT        NOT NULL AUTO_INCREMENT,
     title                 VARCHAR(40)   NOT NULL,
-    content               VARCHAR(1000) NOT NULL,
+    content               VARCHAR(5000) NOT NULL,
     created_date          DATE          NOT NULL,
     image_url1            VARCHAR(500)  NULL,
     image_url2            VARCHAR(500)  NULL,
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS travel_info
 (
     id                    BIGINT        NOT NULL AUTO_INCREMENT,
     title                 VARCHAR(40)   NOT NULL,
-    content               VARCHAR(1000) NOT NULL,
+    content               VARCHAR(5000) NOT NULL,
     created_date          DATE          NOT NULL,
     is_deleted            BIT(1)        NOT NULL DEFAULT false,
     travel_destination_id BIGINT        NOT NULL,

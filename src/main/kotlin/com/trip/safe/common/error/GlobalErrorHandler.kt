@@ -1,9 +1,8 @@
 package com.trip.safe.common.error
 
+import com.trip.safe.common.error.exception.InternalServerErrorException
 import com.trip.safe.common.error.response.BindErrorResponse
 import com.trip.safe.common.error.response.ErrorResponse
-import com.trip.safe.common.error.exception.InternalServerErrorException
-import com.trip.safe.common.error.exception.RequestHandlerNotFoundException
 import org.springframework.boot.autoconfigure.web.WebProperties
 import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler
 import org.springframework.boot.web.reactive.error.ErrorAttributes
@@ -19,7 +18,6 @@ import org.springframework.web.reactive.function.server.RouterFunction
 import org.springframework.web.reactive.function.server.RouterFunctions
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
-import org.springframework.web.server.ResponseStatusException
 import reactor.core.publisher.Mono
 
 @Order(-2)
@@ -47,7 +45,6 @@ class GlobalErrorHandler(
         when (val e = super.getError(request)) {
             is BaseException -> e.toErrorResponse()
             is WebExchangeBindException -> e.getBindErrorMessage()
-            is ResponseStatusException -> RequestHandlerNotFoundException(RequestHandlerNotFoundException.REQUEST_HANDLER_NOT_FOUND).toErrorResponse()
             else -> {
                 e.printStackTrace()
                 InternalServerErrorException(InternalServerErrorException.UNEXPECTED_ERROR).toErrorResponse()

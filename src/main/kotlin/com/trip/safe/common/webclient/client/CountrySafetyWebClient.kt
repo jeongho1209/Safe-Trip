@@ -1,16 +1,14 @@
 package com.trip.safe.common.webclient.client
 
 import com.trip.safe.common.error.exception.BadRequestException
-import com.trip.safe.common.logger.logger
+import com.trip.safe.common.util.toLocalDate
 import com.trip.safe.common.webclient.dto.response.CountrySafetyInfoElement
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.slf4j.Logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBody
-import org.springframework.web.util.DefaultUriBuilderFactory
 import org.xml.sax.InputSource
 import java.io.StringReader
 import javax.xml.parsers.DocumentBuilderFactory
@@ -19,8 +17,7 @@ import javax.xml.parsers.DocumentBuilderFactory
 class CountrySafetyWebClient(
     @Value("\${service.key}")
     private val serviceKey: String,
-    @Value("\${service.url}")
-    private val serviceUrl: String,
+    private val webClient: WebClient,
 ) {
     companion object {
         private const val CONTENT = "content"
@@ -32,21 +29,7 @@ class CountrySafetyWebClient(
         private val TAG_LIST = listOf(CONTENT, COUNTRY_EN_NAME, COUNTRY_NAME, ID, TITLE, WRT_DT)
     }
 
-    private val log: Logger = logger()
-
     suspend fun getCountrySafetyInfo(searchId: String): CountrySafetyInfoElement {
-        val factory = DefaultUriBuilderFactory(serviceUrl).apply {
-            encodingMode = DefaultUriBuilderFactory.EncodingMode.VALUES_ONLY
-        }
-
-        val webClient = WebClient.builder()
-            .uriBuilderFactory(factory)
-            .filter { request, next ->
-                log.info("try to request webclient url : ${request.url()}, method : ${request.method()}")
-                next.exchange(request)
-            }
-            .build()
-
         val response = webClient
             .get()
             .uri { uriBuilder ->
@@ -64,16 +47,36 @@ class CountrySafetyWebClient(
 
         return CountrySafetyInfoElement(
             content = safetyInfoMap[CONTENT]!!,
-            countryEnName = safetyInfoMap[COUNTRY_EN_NAME]!!,
-            countryName = safetyInfoMap[COUNTRY_NAME]!!,
-            id = safetyInfoMap[ID]!!,
+            name = safetyInfoMap[COUNTRY_EN_NAME]!!,
+            engName = safetyInfoMap[COUNTRY_NAME]!!,
+            code = safetyInfoMap[ID]!!,
             title = safetyInfoMap[TITLE]!!,
-            wrtDt = safetyInfoMap[WRT_DT]!!,
+            createdDate = safetyInfoMap[WRT_DT]!!.toLocalDate(),
         )
     }
 
-    suspend fun getCountrySafetyList(pageSize: Int, pageNumber: Int, title: String) {
+    suspend fun getCountrySafetyList(
+        pageSize: Int,
+        pageNumber: Int,
+        title: String,
+        content: String?,
+    ): String {
+        val response = webClient
+            .get()
+            .uri { uriBuilder ->
+                uriBuilder
+                    .path("/getCountrySafetyList")
+                    .queryParam("serviceKey", serviceKey)
+                    .queryParam("numOfRows", pageSize)
+                    .queryParam("pageNo", pageNumber)
+                    .queryParam("title", title)
+                    .queryParam("content", content)
+                    .build()
+            }
+            .retrieve()
+            .awaitBody<String>()
 
+        return response
     }
 
     private suspend fun parsingXML(response: String, safetyInfoMap: MutableMap<String, String>) {

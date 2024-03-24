@@ -2,10 +2,14 @@ package com.trip.safe.safeinfo.service
 
 import com.trip.safe.common.webclient.client.CountrySafetyWebClient
 import com.trip.safe.common.webclient.dto.response.CountrySafetyInfoElement
+import com.trip.safe.common.webclient.dto.response.CountrySafetyInfoList
+import com.trip.safe.common.webclient.dto.response.toCountrySafetyInfoElement
 import com.trip.safe.safeinfo.domain.CountrySafeInfo
 import com.trip.safe.safeinfo.domain.CountrySafeInfoRepository
 import com.trip.safe.travel.domain.TravelDestination
 import com.trip.safe.travel.domain.TravelDestinationRepository
+import kotlinx.coroutines.reactor.awaitSingle
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
@@ -52,6 +56,23 @@ class SafeInfoService(
             code = countrySafetyInfo.code,
             title = countrySafetyInfo.title,
             createdDate = countrySafetyInfo.createdDate
+        )
+    }
+
+    suspend fun getCountrySafetyListByNameOrEngName(
+        name: String?,
+        engName: String?,
+        pageable: Pageable,
+    ): CountrySafetyInfoList {
+        val countrySafeInfoList = travelDestinationRepository.findAllByNameOrEngName(
+            name = name,
+            engName = engName,
+            limit = pageable.pageSize,
+            offset = pageable.offset,
+        ).collectList().awaitSingle()
+
+        return CountrySafetyInfoList(
+            countrySafetyInfoList = countrySafeInfoList.map { it.toCountrySafetyInfoElement() }
         )
     }
 }

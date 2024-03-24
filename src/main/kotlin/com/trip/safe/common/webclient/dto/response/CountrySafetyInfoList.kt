@@ -14,3 +14,12 @@ data class CountrySafetyInfoElement(
     val title: String,
     val createdDate: LocalDate,
 )
+
+fun CountrySafetyInfoElement.toCountrySafetyInfoElement() = CountrySafetyInfoElement(
+    content = this.content,
+    name = this.name,
+    engName = this.engName,
+    code = this.code,
+    title = this.title,
+    createdDate = this.createdDate,
+)

@@ -12,16 +12,16 @@ data class TravelInfoElement(
     val id: Long,
     val title: String,
     val content: String,
-    val createDate: LocalDate,
+    val createdDate: LocalDate,
     val accountId: String,
     val isMine: Boolean,
 )
 
-fun TravelInfoElement.toTravelInfoElement() = TravelInfoElement(
+fun TravelInfoElement.toTravelInfoElement(isMine: Boolean) = TravelInfoElement(
     id = this.id,
     title = this.title,
     content = this.content,
-    createDate = this.createDate,
+    createdDate = this.createdDate,
     accountId = this.accountId,
-    isMine = this.isMine,
+    isMine = isMine,
 )

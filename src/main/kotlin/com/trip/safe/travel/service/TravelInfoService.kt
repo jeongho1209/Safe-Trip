@@ -9,6 +9,12 @@ import com.trip.safe.travel.exception.TravelDestinationNotFoundException
 import com.trip.safe.travel.exception.TravelInfoNotFoundException
 import com.trip.safe.travel.presentation.dto.request.CreateTravelInfoRequest
 import com.trip.safe.travel.presentation.dto.request.UpdateTravelInfoRequest
+import com.trip.safe.travel.presentation.dto.response.MyTravelInfoListResponse
+import com.trip.safe.travel.presentation.dto.response.TravelInfoListResponse
+import com.trip.safe.travel.presentation.dto.response.toMyTravelInfoElement
+import com.trip.safe.travel.presentation.dto.response.toTravelInfoElement
+import kotlinx.coroutines.reactor.awaitSingle
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
@@ -71,7 +77,44 @@ class TravelInfoService(
         travelInfo.deleteTravelInfo()
     }
 
-    suspend fun getTravelInfosByTravelDestinationId(travelDestinationId: Long) {
+    suspend fun getTravelInfosByTravelDestinationId(
+        travelDestinationId: Long,
+        pageable: Pageable
+    ): TravelInfoListResponse {
+        val user = securityFacade.getCurrentUser()
 
+        val travelInfoList = travelInfoRepository.findAllByTravelDestinationId(
+            travelDestinationId = travelDestinationId,
+            limit = pageable.pageSize,
+            offset = pageable.offset,
+        ).collectList().awaitSingle()
+
+        val response = travelInfoList.map {
+            val isMine = it.accountId == user.accountId
+            it.toTravelInfoElement(isMine)
+        }
+
+        val travelDestination = travelDestinationRepository.findById(travelDestinationId)
+            ?: throw TravelDestinationNotFoundException(TravelDestinationNotFoundException.TRAVEL_DESTINATION_NOT_FOUND)
+
+
+        return TravelInfoListResponse(
+            travelInfoList = response,
+            travelDestination = travelDestination,
+        )
+    }
+
+    suspend fun getMyTravelInfos(pageable: Pageable): MyTravelInfoListResponse {
+        val user = securityFacade.getCurrentUser()
+
+        val myTravelInfoList = travelInfoRepository.findAllByUserId(
+            userId = user.id,
+            limit = pageable.pageSize,
+            offset = pageable.offset,
+        ).collectList().awaitSingle()
+
+        return MyTravelInfoListResponse(
+            myTravelInfoList = myTravelInfoList.map { it.toMyTravelInfoElement() }
+        )
     }
 }

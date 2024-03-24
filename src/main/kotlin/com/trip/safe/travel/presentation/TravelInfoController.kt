@@ -2,10 +2,14 @@ package com.trip.safe.travel.presentation
 
 import com.trip.safe.travel.presentation.dto.request.CreateTravelInfoRequest
 import com.trip.safe.travel.presentation.dto.request.UpdateTravelInfoRequest
+import com.trip.safe.travel.presentation.dto.response.MyTravelInfoListResponse
+import com.trip.safe.travel.presentation.dto.response.TravelInfoListResponse
 import com.trip.safe.travel.service.TravelInfoService
 import jakarta.validation.Valid
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -42,5 +46,18 @@ class TravelInfoController(
         @PathVariable("travel-info-id") travelInfoId: Long,
     ) {
         travelInfoService.deleteTravelInfo(travelInfoId)
+    }
+
+    @GetMapping("/{travel-destination-id}")
+    suspend fun getTravelInfosByTravelDestinationId(
+        @PathVariable("travel-destination-id") travelDestinationId: Long,
+        pageable: Pageable,
+    ): TravelInfoListResponse {
+        return travelInfoService.getTravelInfosByTravelDestinationId(travelDestinationId, pageable)
+    }
+
+    @GetMapping("/my")
+    suspend fun getMyTravelInfos(pageable: Pageable): MyTravelInfoListResponse {
+        return travelInfoService.getMyTravelInfos(pageable)
     }
 }

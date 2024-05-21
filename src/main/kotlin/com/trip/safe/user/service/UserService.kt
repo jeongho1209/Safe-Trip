@@ -1,5 +1,6 @@
 package com.trip.safe.user.service
 
+import com.trip.safe.common.security.SecurityFacade
 import com.trip.safe.common.security.jwt.JwtTokenProvider
 import com.trip.safe.user.domain.User
 import com.trip.safe.user.domain.UserRepository
@@ -8,6 +9,7 @@ import com.trip.safe.user.exception.UserExistException
 import com.trip.safe.user.exception.UserNotFoundException
 import com.trip.safe.user.presentation.dto.request.UserSignInRequest
 import com.trip.safe.user.presentation.dto.request.UserSignUpRequest
+import com.trip.safe.user.presentation.dto.response.MyInfoResponse
 import com.trip.safe.user.presentation.dto.response.TokenResponse
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -17,6 +19,7 @@ class UserService(
     private val userRepository: UserRepository,
     private val jwtTokenProvider: JwtTokenProvider,
     private val passwordEncoder: PasswordEncoder,
+    private val securityFacade: SecurityFacade,
 ) {
 
     suspend fun signUp(request: UserSignUpRequest): TokenResponse {
@@ -44,5 +47,14 @@ class UserService(
         }
 
         return jwtTokenProvider.getToken(request.accountId)
+    }
+
+    suspend fun getMyInfo(): MyInfoResponse {
+        val user = securityFacade.getCurrentUser()
+
+        return MyInfoResponse(
+            accountId = user.accountId,
+            age = user.age
+        )
     }
 }

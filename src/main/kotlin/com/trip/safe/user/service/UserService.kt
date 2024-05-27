@@ -2,6 +2,7 @@ package com.trip.safe.user.service
 
 import com.trip.safe.common.security.SecurityFacade
 import com.trip.safe.common.security.jwt.JwtTokenProvider
+import com.trip.safe.review.domain.ReviewRepository
 import com.trip.safe.user.domain.User
 import com.trip.safe.user.domain.UserRepository
 import com.trip.safe.user.exception.PasswordMisMatchException
@@ -11,6 +12,7 @@ import com.trip.safe.user.presentation.dto.request.UserSignInRequest
 import com.trip.safe.user.presentation.dto.request.UserSignUpRequest
 import com.trip.safe.user.presentation.dto.response.MyInfoResponse
 import com.trip.safe.user.presentation.dto.response.TokenResponse
+import kotlinx.coroutines.reactive.awaitSingle
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -20,6 +22,7 @@ class UserService(
     private val jwtTokenProvider: JwtTokenProvider,
     private val passwordEncoder: PasswordEncoder,
     private val securityFacade: SecurityFacade,
+    private val reviewRepository: ReviewRepository,
 ) {
 
     suspend fun signUp(request: UserSignUpRequest): TokenResponse {
@@ -52,9 +55,13 @@ class UserService(
     suspend fun getMyInfo(): MyInfoResponse {
         val user = securityFacade.getCurrentUser()
 
+        val reviewList = reviewRepository.findAllByUser(user.id)
+            .collectList().awaitSingle()
+
         return MyInfoResponse(
             accountId = user.accountId,
-            age = user.age
+            age = user.age,
+            reviewList = reviewList
         )
     }
 }

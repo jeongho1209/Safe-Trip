@@ -1,6 +1,5 @@
 package com.trip.safe.review.service
 
-import com.trip.safe.common.error.exception.BadRequestException
 import com.trip.safe.common.error.exception.ForbiddenException
 import com.trip.safe.common.security.SecurityFacade
 import com.trip.safe.review.domain.Review
@@ -24,11 +23,6 @@ class ReviewService(
     private val reviewRepository: ReviewRepository,
     private val securityFacade: SecurityFacade,
 ) {
-    companion object {
-        private const val MY = "my"
-        private const val ALL = "all"
-    }
-
     suspend fun createReview(request: CreateReviewRequest, travelDestinationId: Long) {
         val user = securityFacade.getCurrentUser()
         val travelDestination = travelDestinationRepository.findById(travelDestinationId)
@@ -88,26 +82,11 @@ class ReviewService(
         pageable: Pageable,
     ): ReviewListResponse {
         val user = securityFacade.getCurrentUser()
-        val reviewList = when (type) {
-            MY -> {
-                reviewRepository.findAllByTravelDestinationId(
-                    travelDestinationId = travelDestinationId,
-                    limit = pageable.pageSize,
-                    offset = pageable.offset,
-                )
-            }
-
-            ALL -> {
-                reviewRepository.findAllByUserAndTravelDestinationId(
-                    travelDestinationId = travelDestinationId,
-                    userId = user.id,
-                    limit = pageable.pageSize,
-                    offset = pageable.offset,
-                )
-            }
-
-            else -> throw BadRequestException(BadRequestException.BAD_REQUEST)
-        }.collectList().awaitSingle()
+        val reviewList = reviewRepository.findAllByTravelDestinationId(
+            travelDestinationId = travelDestinationId,
+            limit = pageable.pageSize,
+            offset = pageable.offset,
+        ).collectList().awaitSingle()
 
         val travelDestination = travelDestinationRepository.findById(travelDestinationId)
             ?: throw TravelDestinationNotFoundException(TravelDestinationNotFoundException.TRAVEL_DESTINATION_NOT_FOUND)

@@ -43,16 +43,9 @@ interface ReviewRepository : CoroutineCrudRepository<Review, Long> {
             FROM review AS r
             INNER JOIN user AS u
             ON r.user_id = u.id
-            WHERE r.travel_destination_id = :travelDestinationId AND r.user_id = :userId AND r.is_deleted = false 
+            WHERE r.user_id = :userId AND r.is_deleted = false 
             ORDER BY created_date DESC
-            LIMIT :limit
-            OFFSET :offset
         """
     )
-    suspend fun findAllByUserAndTravelDestinationId(
-        travelDestinationId: Long,
-        userId: Long,
-        limit: Int,
-        offset: Long,
-    ): Flux<ReviewElement>
+    suspend fun findAllByUser(userId: Long): Flux<ReviewElement>
 }

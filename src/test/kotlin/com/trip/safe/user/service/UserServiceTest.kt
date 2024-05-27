@@ -1,6 +1,8 @@
 package com.trip.safe.user.service
 
+import com.trip.safe.common.security.SecurityFacade
 import com.trip.safe.common.security.jwt.JwtTokenProvider
+import com.trip.safe.review.domain.ReviewRepository
 import com.trip.safe.user.domain.User
 import com.trip.safe.user.domain.UserRepository
 import com.trip.safe.user.exception.PasswordMisMatchException
@@ -12,7 +14,6 @@ import io.kotest.core.spec.style.DescribeSpec
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.verify
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -22,7 +23,10 @@ class UserServiceTest : DescribeSpec(
         val userRepository = mockk<UserRepository>(relaxed = true)
         val jwtTokenProvider = mockk<JwtTokenProvider>(relaxed = true)
         val passwordEncoder = mockk<PasswordEncoder>(relaxed = true)
-        val userService = UserService(userRepository, jwtTokenProvider, passwordEncoder)
+        val securityFacade = mockk<SecurityFacade>(relaxed = true)
+        val reviewRepository = mockk<ReviewRepository>(relaxed = true)
+        val userService =
+            UserService(userRepository, jwtTokenProvider, passwordEncoder, securityFacade, reviewRepository)
         val signUpRequestStub = UserSignUpRequest("testAccountId", "testPassword", 20)
         val signInRequestStub = UserSignInRequest("testAccountId", "testPassword")
         val userStub = User(

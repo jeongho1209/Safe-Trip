@@ -61,21 +61,21 @@ class ReviewController(
         return reviewService.getReviewsByTravelDestinationId(travelDestinationId, type, pageable)
     }
 
-    @GetMapping("/save")
-    suspend fun testSave() {
-        for (i in 1..1000) {
-            reviewRepository.save(
-                Review(
-                    title = "asf",
-                    content = "afs",
-                    createdDate = LocalDate.now(),
-                    imageUrl1 = null,
-                    imageUrl2 = null,
-                    imageUrl3 = null,
-                    travelDestinationId = 1,
-                    userId = 1
-                )
-            )
-        }
-    }
+//    @GetMapping("/save")
+//    suspend fun testSave() {
+//        for (i in 1..1000) {
+//            reviewRepository.save(
+//                Review(
+//                    title = "asf",
+//                    content = "afs",
+//                    createdDate = LocalDate.now(),
+//                    imageUrl1 = null,
+//                    imageUrl2 = null,
+//                    imageUrl3 = null,
+//                    travelDestinationId = 1,
+//                    userId = 1
+//                )
+//            )
+//        }
+//    }
 }

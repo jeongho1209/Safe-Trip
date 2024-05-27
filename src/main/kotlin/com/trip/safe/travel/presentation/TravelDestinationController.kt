@@ -31,17 +31,17 @@ class TravelDestinationController(
         return travelDestinationService.getTravelDestinationListByName(name, pageable)
     }
 
-    // save dummy
-    @PostMapping("/save")
-    suspend fun saveAll() {
-        for (i in 1..1000) {
-            travelDestinationRepository.save(
-                TravelDestination(
-                    name = "a",
-                    engName = "b",
-                    code = "c",
-                )
-            )
-        }
-    }
+//    // save dummy
+//    @PostMapping("/save")
+//    suspend fun saveAll() {
+//        for (i in 1..1000) {
+//            travelDestinationRepository.save(
+//                TravelDestination(
+//                    name = "a",
+//                    engName = "b",
+//                    code = "c",
+//                )
+//            )
+//        }
+//    }
 }

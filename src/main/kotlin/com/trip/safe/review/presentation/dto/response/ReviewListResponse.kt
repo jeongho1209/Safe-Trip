@@ -16,7 +16,7 @@ data class ReviewElement(
     val imageUrl1: String?,
     val imageUrl2: String?,
     val imageUrl3: String?,
-    val isMine: Boolean,
+    val isMine: Boolean?,
     val accountId: String,
 )
 

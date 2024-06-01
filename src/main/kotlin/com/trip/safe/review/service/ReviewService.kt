@@ -60,6 +60,8 @@ class ReviewService(
             imageUrl2 = request.imageUrl2,
             imageUrl3 = request.imageUrl3
         )
+
+        reviewRepository.save(review)
     }
 
     @Transactional
@@ -74,6 +76,7 @@ class ReviewService(
         }
 
         review.deleteReview()
+        reviewRepository.save(review)
     }
 
     suspend fun getReviewsByTravelDestinationId(

@@ -3,6 +3,7 @@ package com.trip.safe.user.service
 import com.trip.safe.common.security.SecurityFacade
 import com.trip.safe.common.security.jwt.JwtTokenProvider
 import com.trip.safe.review.domain.ReviewRepository
+import com.trip.safe.review.presentation.dto.response.toReviewElement
 import com.trip.safe.user.domain.User
 import com.trip.safe.user.domain.UserRepository
 import com.trip.safe.user.exception.PasswordMisMatchException
@@ -58,10 +59,12 @@ class UserService(
         val reviewList = reviewRepository.findAllByUser(user.id)
             .collectList().awaitSingle()
 
+        val response = reviewList.map { it.toReviewElement(user.accountId) }
+
         return MyInfoResponse(
             accountId = user.accountId,
             age = user.age,
-            reviewList = reviewList
+            reviewList = response,
         )
     }
 }

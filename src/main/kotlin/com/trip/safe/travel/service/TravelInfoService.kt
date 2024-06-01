@@ -61,6 +61,8 @@ class TravelInfoService(
                 travelDestinationId = request.travelDestinationId,
             )
         } ?: throw TravelDestinationNotFoundException(TravelDestinationNotFoundException.TRAVEL_DESTINATION_NOT_FOUND)
+
+        travelInfoRepository.save(travelInfo)
     }
 
     @Transactional
@@ -75,6 +77,7 @@ class TravelInfoService(
         }
 
         travelInfo.deleteTravelInfo()
+        travelInfoRepository.save(travelInfo)
     }
 
     suspend fun getTravelInfosByTravelDestinationId(

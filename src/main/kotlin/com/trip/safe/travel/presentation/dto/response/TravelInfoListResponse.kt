@@ -14,7 +14,14 @@ data class TravelInfoElement(
     val content: String,
     val createdDate: LocalDate,
     val accountId: String,
-    val isMine: Boolean,
+    val isMine: Boolean?,
+)
+
+data class MyTravelInfoElement(
+    val id: Long,
+    val title: String,
+    val content: String,
+    val name: String
 )
 
 fun TravelInfoElement.toTravelInfoElement(isMine: Boolean) = TravelInfoElement(

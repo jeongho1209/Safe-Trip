@@ -37,19 +37,15 @@ interface TravelInfoRepository : CoroutineCrudRepository<TravelInfo, Long> {
                 ti.id,
                 ti.title,
                 ti.content,
-                ti.created_date
+                td.name
             FROM travel_info AS ti
             INNER JOIN user AS u
             ON ti.user_id = u.id
+            INNER JOIN travel_destination AS td
+            ON ti.travel_destination_id = td.id
             WHERE ti.user_id = :userId AND ti.is_deleted = false
             ORDER BY ti.created_date DESC
-            LIMIT :limit
-            OFFSET :offset
         """
     )
-    suspend fun findAllByUserId(
-        userId: Long,
-        limit: Int,
-        offset: Long,
-    ): Flux<MyTravelInfoElement>
+    suspend fun findAllByUserId(userId: Long): Flux<MyTravelInfoElement>
 }

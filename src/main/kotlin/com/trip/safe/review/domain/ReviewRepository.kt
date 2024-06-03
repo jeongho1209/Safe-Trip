@@ -47,5 +47,5 @@ interface ReviewRepository : CoroutineCrudRepository<Review, Long> {
             ORDER BY created_date DESC
         """
     )
-    suspend fun findAllByUser(userId: Long): Flux<ReviewElement>
+    suspend fun findAllByUserId(userId: Long): Flux<ReviewElement>
 }

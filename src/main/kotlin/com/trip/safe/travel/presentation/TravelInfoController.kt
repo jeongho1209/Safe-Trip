@@ -2,7 +2,6 @@ package com.trip.safe.travel.presentation
 
 import com.trip.safe.travel.presentation.dto.request.CreateTravelInfoRequest
 import com.trip.safe.travel.presentation.dto.request.UpdateTravelInfoRequest
-import com.trip.safe.travel.presentation.dto.response.MyTravelInfoListResponse
 import com.trip.safe.travel.presentation.dto.response.TravelInfoListResponse
 import com.trip.safe.travel.service.TravelInfoService
 import jakarta.validation.Valid
@@ -54,10 +53,5 @@ class TravelInfoController(
         pageable: Pageable,
     ): TravelInfoListResponse {
         return travelInfoService.getTravelInfosByTravelDestinationId(travelDestinationId, pageable)
-    }
-
-    @GetMapping("/my")
-    suspend fun getMyTravelInfos(pageable: Pageable): MyTravelInfoListResponse {
-        return travelInfoService.getMyTravelInfos(pageable)
     }
 }

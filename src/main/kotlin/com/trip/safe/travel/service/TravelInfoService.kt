@@ -9,9 +9,7 @@ import com.trip.safe.travel.exception.TravelDestinationNotFoundException
 import com.trip.safe.travel.exception.TravelInfoNotFoundException
 import com.trip.safe.travel.presentation.dto.request.CreateTravelInfoRequest
 import com.trip.safe.travel.presentation.dto.request.UpdateTravelInfoRequest
-import com.trip.safe.travel.presentation.dto.response.MyTravelInfoListResponse
 import com.trip.safe.travel.presentation.dto.response.TravelInfoListResponse
-import com.trip.safe.travel.presentation.dto.response.toMyTravelInfoElement
 import com.trip.safe.travel.presentation.dto.response.toTravelInfoElement
 import kotlinx.coroutines.reactor.awaitSingle
 import org.springframework.data.domain.Pageable
@@ -36,7 +34,7 @@ class TravelInfoService(
             TravelInfo(
                 title = request.title,
                 content = request.content,
-                createDate = LocalDate.now(),
+                createdDate = LocalDate.now(),
                 travelDestinationId = travelDestination.id,
                 userId = user.id
             )
@@ -54,14 +52,10 @@ class TravelInfoService(
             throw ForbiddenException(ForbiddenException.FORBIDDEN)
         }
 
-        travelDestinationRepository.findById(request.travelDestinationId)?.let {
-            travelInfo.updateTravelInfo(
-                title = request.title,
-                content = request.content,
-                travelDestinationId = request.travelDestinationId,
-            )
-        } ?: throw TravelDestinationNotFoundException(TravelDestinationNotFoundException.TRAVEL_DESTINATION_NOT_FOUND)
-
+        travelInfo.updateTravelInfo(
+            title = request.title,
+            content = request.content,
+        )
         travelInfoRepository.save(travelInfo)
     }
 
@@ -100,24 +94,9 @@ class TravelInfoService(
         val travelDestination = travelDestinationRepository.findById(travelDestinationId)
             ?: throw TravelDestinationNotFoundException(TravelDestinationNotFoundException.TRAVEL_DESTINATION_NOT_FOUND)
 
-
         return TravelInfoListResponse(
             travelInfoList = response,
             travelDestination = travelDestination,
-        )
-    }
-
-    suspend fun getMyTravelInfos(pageable: Pageable): MyTravelInfoListResponse {
-        val user = securityFacade.getCurrentUser()
-
-        val myTravelInfoList = travelInfoRepository.findAllByUserId(
-            userId = user.id,
-            limit = pageable.pageSize,
-            offset = pageable.offset,
-        ).collectList().awaitSingle()
-
-        return MyTravelInfoListResponse(
-            myTravelInfoList = myTravelInfoList.map { it.toMyTravelInfoElement() }
         )
     }
 }

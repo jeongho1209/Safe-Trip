@@ -81,7 +81,6 @@ class ReviewService(
 
     suspend fun getReviewsByTravelDestinationId(
         travelDestinationId: Long,
-        type: String,
         pageable: Pageable,
     ): ReviewListResponse {
         val user = securityFacade.getCurrentUser()

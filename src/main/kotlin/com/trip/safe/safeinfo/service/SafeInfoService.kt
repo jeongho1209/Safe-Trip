@@ -32,6 +32,9 @@ class SafeInfoService(
         }
 
         val countrySafetyInfo = countrySafetyWebClient.getCountrySafetyInfo(searchId)
+
+        val refinedSafeContent = countrySafetyInfo.content.replace("r'&nbsp;|&amp;|&quot;|&lt;|&gt;|\\s+", "")
+
         val newTravelDestination = travelDestinationRepository.save(
             TravelDestination(
                 name = countrySafetyInfo.engName,
@@ -43,14 +46,14 @@ class SafeInfoService(
         countrySafeInfoRepository.save(
             CountrySafeInfo(
                 title = countrySafetyInfo.title,
-                content = countrySafetyInfo.content,
+                content = refinedSafeContent,
                 createdDate = countrySafetyInfo.createdDate,
                 travelDestinationId = newTravelDestination.id,
             )
         )
 
         return CountrySafetyInfoElement(
-            content = countrySafetyInfo.content,
+            content = refinedSafeContent,
             name = countrySafetyInfo.name,
             engName = countrySafetyInfo.engName,
             code = countrySafetyInfo.code,

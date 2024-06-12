@@ -24,7 +24,7 @@ class WebClientConfiguration(
     fun webClient() = WebClient.builder()
         .uriBuilderFactory(defaultUriFactory())
         .filter { request, next ->
-            log.info("try to request webclient url : ${request.url()}, method : ${request.method()}")
+            log.info("try to request webclient url : ${request.url()}")
             next.exchange(request)
         }
         .build()
